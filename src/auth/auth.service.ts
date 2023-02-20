@@ -22,7 +22,6 @@ export class AuthService {
 
         const hashedPassword = await this.hashData(createUserDto.password);
         createUserDto.password = hashedPassword;
-        console.log(createUserDto.password);
         const newUser = await this.usersService.create(createUserDto);
         const tokens = await this.getTokens(newUser.id, newUser.email);
         await this.updateRefreshToken(newUser.id, tokens.refreshToken);

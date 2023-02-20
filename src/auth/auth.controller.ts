@@ -1,6 +1,7 @@
 import { Controller, Post, Get, Body, Param, Req ,UseGuards} from '@nestjs/common';
 import { Request } from 'express';
 import { AccessTokenGuard } from 'src/common/guards/accessToken.guard';
+import { RefreshTokenGuard } from 'src/common/guards/refreshToken.guard';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { AuthService } from './auth.service';
 import { AuthDto } from './dto/auth.dto';
@@ -24,5 +25,13 @@ export class AuthController {
   @Get('logout')
   logout(@Req() req : Request) {
     return this.authService.logout(req.user['id']);
+  }
+
+  @UseGuards(RefreshTokenGuard)
+  @Get('refresh')
+  refreshTokens(@Req() req : Request){
+    const userId= req.user['id'];
+    const refreshToken = req.user['refreshToken'];
+    return this.authService.refreshToken(userId, refreshToken);
   }
 }
