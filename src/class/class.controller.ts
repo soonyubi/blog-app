@@ -12,6 +12,8 @@ export class ClassController {
   }
   
   // space 
+
+  // create space
   @UseGuards(AccessTokenGuard)
   @Post()
   createSpace(@Body() createSpaceDto: CreateSpaceDto,@Req() req:Request){
@@ -19,6 +21,7 @@ export class ClassController {
     return this.classService.createSpace(createSpaceDto,userId);
   }
 
+  // join space
   @UseGuards(AccessTokenGuard)
   @Post(':id/join')
   joinSpace(@Param('id',ParseIntPipe) spaceId : number,@Req() req:Request,@Body('id') spaceRoleId : number){
@@ -26,12 +29,15 @@ export class ClassController {
       return this.classService.joinSpace(userId, spaceId, spaceRoleId);
   }
 
+  // delete space
   @UseGuards(AccessTokenGuard)
   @Delete(':id')
   deleteSpace(@Param('id') spaceId : number, @Req() req: Request){
     const userId = req.user['id'];
     return this.classService.deleteSpace(userId, spaceId);
   }
+
+
   // space - role
   @UseGuards(AccessTokenGuard)
   @Get(':id/space-role')
@@ -42,9 +48,16 @@ export class ClassController {
 
   @UseGuards(AccessTokenGuard)
   @Post(":id/space-role")
-  createSpaceRole(@Param('id',ParseIntPipe) spaceId : number, @Body() createSpaceRoleDto : CreateSpaceRoleDto){
-    return this.classService.createSpaceRole(spaceId,createSpaceRoleDto );
+  createSpaceRole(@Param('id',ParseIntPipe) spaceId : number, @Body() spaceRoleDto : CreateSpaceRoleDto, @Req() req: Request){
+    // TODO : 개설자만 role을 생성할 수 있도록 수정
+    const userId = req.user['id'];
+    return this.classService.createSpaceRole(userId, spaceId,spaceRoleDto );
   }
 
-  
+  @UseGuards(AccessTokenGuard)
+  @Delete(':id/space-role')
+  deleteSpaceRole(@Param('id',ParseIntPipe) spaceId: number, @Body('id') spaceRoleId : number, @Req() req: Request){
+    const userId = req.user['id'];
+    return this.classService.deleteSpaceRole(userId, spaceId, spaceRoleId);
+  }
 }

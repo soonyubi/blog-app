@@ -63,9 +63,7 @@ export class ClassService {
     }
 
     async deleteSpace(userId:number, spaceId : number){
-        const space = await this.getSpaceById(spaceId);
-        if(!space) throw new BadRequestException("Invalid space id");
-        if(!userId || userId !== space.owner) throw new ForbiddenException("You are not onwer of space");
+        const space = await this.checkSpaceOwner(userId, spaceId);
 
         // 1. space 와 연관된 role 삭제
         await this.spaceRoleRepository.softDelete({space});
@@ -82,14 +80,12 @@ export class ClassService {
      *  Space Role service
      * 
     */
-    async createSpaceRole(id : number, createSpaceRoleDto : CreateSpaceRoleDto){
-        let space = await this.getSpaceById(id);
-        
-        if(!space) throw new BadRequestException("Invalid space id");
+    async createSpaceRole(userId : number, spaceId : number, createSpaceRoleDto : CreateSpaceRoleDto){
+        const space = await this.checkSpaceOwner(userId,spaceId);
         const {admin, participant} = createSpaceRoleDto;
         //create admin space-role 
         for(let i =0; i< admin.length; i++){ 
-            console.log(admin[i]);
+            
             let newRole = await this.spaceRoleRepository.save({
                 isAdmin : true,
                 rolename : admin[i].toString()
@@ -108,10 +104,40 @@ export class ClassService {
         return this.spaceRepository.save(space);
     }
 
+    async deleteSpaceRole(userId : number, spaceId: number,spaceRoleId : number){
+        
+        const space = await this.checkSpaceOwner(userId, spaceId);
+        const role = await this.spaceRoleRepository.findOne({where:{id:spaceRoleId}});
+        const take = await this.takeRepository.find({spaceId:spaceId, role : role});
+        
+        if(take) throw new BadRequestException("Unable to delete because someone is in use.");
+
+        const spaceRoleList = space.spaceRoles;
+        let isDelete = false;
+
+        spaceRoleList.map(item =>{
+            if(item.id === spaceRoleId){
+                const index = spaceRoleList.indexOf(item);
+                spaceRoleList.splice(index,1);
+                isDelete = true;
+            }
+        });
+        await this.spaceRoleRepository.softDelete({id:spaceRoleId});
+        space.spaceRoles= spaceRoleList;
+        return this.spaceRepository.save(space);
+    }
+
     /** 
      *  Helper function
      * 
     */
+    async checkSpaceOwner(userId: number, spaceId :number){
+        const space = await this.getSpaceById(spaceId);
+        if(!space)throw new BadRequestException("Invalid space id");
+        if(!userId || userId !== space.owner) throw new ForbiddenException("You are not owner of space");
+        return space;
+    }
+
     getSpaceById(id : number){
         return this.spaceRepository.findOne(id,{relations : ['spaceRoles']});
 
