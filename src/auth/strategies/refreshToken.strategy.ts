@@ -9,7 +9,7 @@ type JwtPayload = {
 }
 
 @Injectable()
-export class AccessTokenStrategy extends PassportStrategy(Strategy,'jwt-refresh'){
+export class RefreshTokenStrategy extends PassportStrategy(Strategy,'jwt-refresh'){
     constructor() {
         super({
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
