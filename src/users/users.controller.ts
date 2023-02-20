@@ -22,7 +22,6 @@ export class UsersController {
   @UseGuards(AccessTokenGuard)
   @Get(':id')
   findOne(@Param('id') id: string, @Req() req : Request) {
-    
     return this.usersService.findOne(+id,req.user['email']);
   }
 

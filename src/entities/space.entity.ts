@@ -16,6 +16,9 @@ export class Space extends Base{
     @Column({length : 8})
     participant_verify_code : string;
 
+    @Column()
+    isOpendByUser : number;
+
     @OneToMany(()=>SpaceRole, (spaceRole)=>spaceRole.space)
     spaceRoles:SpaceRole[];
 }

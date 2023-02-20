@@ -12,10 +12,15 @@ export class ClassService {
         @InjectRepository(Space) private spaceRepository : Repository<Space>,
         @InjectRepository(SpaceRole) private spaceRoleRepository : Repository<SpaceRole>
     ){}
-    async createSpace(createSpaceDto : CreateSpaceDto){
+    async createSpace(createSpaceDto : CreateSpaceDto, userId : number){
         const admin_verify_code = this.getVerifyCode();
         const participant_verify_code = this.getVerifyCode();
-        const result = await this.spaceRepository.save({...createSpaceDto,admin_verify_code,participant_verify_code});
+        const result = await this.spaceRepository.save({
+            ...createSpaceDto,
+            admin_verify_code,
+            participant_verify_code,
+            isOpendByUser : userId
+        });
         return result;
     }
 
@@ -42,9 +47,13 @@ export class ClassService {
                 rolename : participant[i].toString()
             });
             space.spaceRoles.push(newRole);
-        } 
+        }
         
-        return space;
+        return this.spaceRepository.save(space);
+    }
+
+    async joinSpace(userId : number, spaceId:number, verifyCode : string){
+
     }
 
     getSpaceById(id : number){

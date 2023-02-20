@@ -12,6 +12,7 @@ import { ClassModule } from './class/class.module';
 import authConfig from './config/env/authConfig';
 import { Space } from './entities/space.entity';
 import { SpaceRole } from './entities/spaceRole.entity';
+import { Take } from './entities/take.entity';
 
 @Module({
   imports: [
@@ -28,7 +29,7 @@ import { SpaceRole } from './entities/spaceRole.entity';
     username : process.env.DATABASE_USERNAME,
     password : process.env.DATABASE_PASSWORD,
     database : 'classum',
-    entities : [User, Space,SpaceRole ],
+    entities : [User, Space,SpaceRole, Take ],
     synchronize : process.env.DATABASE_SYNCHRONIZE==='true'
   }),
     UsersModule,
