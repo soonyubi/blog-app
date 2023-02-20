@@ -7,6 +7,7 @@ import { AppService } from './app.service';
 import { validationSchema } from './config/env/validationSchema';
 import { User } from './entities/user.entity';
 import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -26,7 +27,8 @@ import { UsersModule } from './users/users.module';
     entities : [User],
     synchronize : process.env.DATABASE_SYNCHRONIZE==='true'
   }),
-    UsersModule],
+    UsersModule,
+    AuthModule],
   controllers: [AppController],
   providers: [AppService, ConfigService],
 })
