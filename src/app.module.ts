@@ -28,7 +28,7 @@ import { Take } from './entities/take.entity';
     port : parseInt(process.env.DATABASE_PORT,10),
     username : process.env.DATABASE_USERNAME,
     password : process.env.DATABASE_PASSWORD,
-    database : 'classum',
+    database : process.env.DATABASE_NAME,
     entities : [User, Space,SpaceRole, Take ],
     synchronize : process.env.DATABASE_SYNCHRONIZE==='true'
   }),
