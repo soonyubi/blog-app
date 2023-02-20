@@ -6,6 +6,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { validationSchema } from './config/env/validationSchema';
 import { User } from './entities/user.entity';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -24,7 +25,8 @@ import { User } from './entities/user.entity';
     database : 'classum',
     entities : [User],
     synchronize : process.env.DATABASE_SYNCHRONIZE==='true'
-  })],
+  }),
+    UsersModule],
   controllers: [AppController],
   providers: [AppService, ConfigService],
 })
