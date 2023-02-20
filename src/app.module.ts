@@ -8,6 +8,7 @@ import { validationSchema } from './config/env/validationSchema';
 import { User } from './entities/user.entity';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
+import { ClassModule } from './class/class.module';
 import authConfig from './config/env/authConfig';
 
 @Module({
@@ -29,7 +30,8 @@ import authConfig from './config/env/authConfig';
     synchronize : process.env.DATABASE_SYNCHRONIZE==='true'
   }),
     UsersModule,
-    AuthModule],
+    AuthModule,
+    ClassModule],
   controllers: [AppController],
   providers: [AppService, ConfigService],
 })
