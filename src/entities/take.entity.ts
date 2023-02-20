@@ -9,10 +9,8 @@ export class Take extends Base{
     userId : number;
 
     @Column()
-    classId : number;
+    spaceId : number;
 
-    @Column()
-    verifyCode: string;
 
     @OneToOne(()=>SpaceRole)
     @JoinColumn()

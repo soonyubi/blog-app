@@ -1,17 +1,24 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable, BadRequestException , ForbiddenException} from '@nestjs/common';
 import {InjectRepository} from "@nestjs/typeorm";
 import {Repository} from "typeorm";
 import { Space } from 'src/entities/space.entity';
 import { CreateSpaceRoleDto } from './dto/create-space-role.dto';
 import { CreateSpaceDto } from './dto/create-space.dto';
 import { SpaceRole } from 'src/entities/spaceRole.entity';
+import { Take } from 'src/entities/take.entity';
 
 @Injectable()
 export class ClassService {
     constructor(
         @InjectRepository(Space) private spaceRepository : Repository<Space>,
-        @InjectRepository(SpaceRole) private spaceRoleRepository : Repository<SpaceRole>
+        @InjectRepository(SpaceRole) private spaceRoleRepository : Repository<SpaceRole>,
+        @InjectRepository(Take) private takeRepository : Repository<Take>
     ){}
+
+    /**
+     *  Space service
+     * 
+    */
     async createSpace(createSpaceDto : CreateSpaceDto, userId : number){
         const admin_verify_code = this.getVerifyCode();
         const participant_verify_code = this.getVerifyCode();
@@ -19,15 +26,64 @@ export class ClassService {
             ...createSpaceDto,
             admin_verify_code,
             participant_verify_code,
-            isOpendByUser : userId
+            owner : userId
         });
         return result;
     }
 
+    async joinSpace(userId : number, spaceId : number, spaceRoleId: number){
+        const spaceRole = await this.spaceRoleRepository.findOne({where:{id: spaceRoleId}});
+        if(!spaceRole) throw new BadRequestException("Invalid space role id");
+        const newTake = {
+            userId, 
+            spaceId,
+            role : spaceRole
+        }
+        const take = await this.takeRepository.save(newTake);
+        return take;
+    }
+
+    async getSpaceRole(spaceId:number, verifyCode : string){
+        const space = await this.getSpaceById(spaceId);
+        if(!space) throw new BadRequestException("Invalid space id");
+        const roles = space.spaceRoles;
+        let admin_roles = [];
+        let participant_roles = [];
+        for(var i =0;i<roles.length;i++){
+            if(roles[i].isAdmin) admin_roles.push(roles[i]);
+            else participant_roles.push(roles[i]);
+        }
+        if(space.admin_verify_code.toString() === verifyCode.toString()){
+            return {admin_roles};
+        }else if(space.participant_verify_code.toString() === verifyCode.toString()){
+            return {participant_roles};
+        }else{
+            throw new BadRequestException("Invalid verify code");
+        }
+    }
+
+    async deleteSpace(userId:number, spaceId : number){
+        const space = await this.getSpaceById(spaceId);
+        if(!space) throw new BadRequestException("Invalid space id");
+        if(!userId || userId !== space.owner) throw new ForbiddenException("You are not onwer of space");
+
+        // 1. space 와 연관된 role 삭제
+        await this.spaceRoleRepository.softDelete({space});
+        // 2. space 삭제
+        await this.spaceRepository.softDelete({id:spaceId});
+        // 3. take 삭제 ( spaceId)
+        await this.takeRepository.softDelete({spaceId});
+
+        return "delete success!";
+    }
+
+    
+    /**
+     *  Space Role service
+     * 
+    */
     async createSpaceRole(id : number, createSpaceRoleDto : CreateSpaceRoleDto){
-        let space = await this.spaceRepository.findOne(id,{
-            relations : ['spaceRoles']
-        });
+        let space = await this.getSpaceById(id);
         
         if(!space) throw new BadRequestException("Invalid space id");
         const {admin, participant} = createSpaceRoleDto;
@@ -52,12 +108,13 @@ export class ClassService {
         return this.spaceRepository.save(space);
     }
 
-    async joinSpace(userId : number, spaceId:number, verifyCode : string){
-
-    }
-
+    /** 
+     *  Helper function
+     * 
+    */
     getSpaceById(id : number){
-        return this.spaceRepository.findOne({where:{id}});
+        return this.spaceRepository.findOne(id,{relations : ['spaceRoles']});
+
     } 
     getVerifyCode(){
         const characters = "abcdefghijklmnopqrstuvwxyz";

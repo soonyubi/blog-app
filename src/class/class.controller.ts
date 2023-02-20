@@ -20,16 +20,27 @@ export class ClassController {
   }
 
   @UseGuards(AccessTokenGuard)
-  @Get(':id/join')
-  joinSpace(@Param('id',ParseIntPipe) spaceId : number,@Body() verifyCodeDto : VerifyCodeDto, @Req() req:Request){
+  @Post(':id/join')
+  joinSpace(@Param('id',ParseIntPipe) spaceId : number,@Req() req:Request,@Body('id') spaceRoleId : number){
       const userId = req.user['id'];
-      const {verifyCode} = verifyCodeDto;
-      return this.classService.joinSpace(userId, spaceId, verifyCode);
+      return this.classService.joinSpace(userId, spaceId, spaceRoleId);
   }
 
-
-
+  @UseGuards(AccessTokenGuard)
+  @Delete(':id')
+  deleteSpace(@Param('id') spaceId : number, @Req() req: Request){
+    const userId = req.user['id'];
+    return this.classService.deleteSpace(userId, spaceId);
+  }
   // space - role
+  @UseGuards(AccessTokenGuard)
+  @Get(':id/space-role')
+  getSpaceRole(@Param('id',ParseIntPipe) spaceId : number,@Body() verifyCodeDto : VerifyCodeDto){
+      const {verifyCode} = verifyCodeDto;
+      return this.classService.getSpaceRole(spaceId, verifyCode.trim());
+  }
+
+  @UseGuards(AccessTokenGuard)
   @Post(":id/space-role")
   createSpaceRole(@Param('id',ParseIntPipe) spaceId : number, @Body() createSpaceRoleDto : CreateSpaceRoleDto){
     return this.classService.createSpaceRole(spaceId,createSpaceRoleDto );
