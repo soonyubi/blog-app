@@ -3,7 +3,7 @@ import { Base } from "./base.entity";
 
 @Entity('user')
 export class User extends Base{
-    @Column({unique : true})
+    @Column()
     email : string;
 
     @Column()
