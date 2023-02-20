@@ -6,7 +6,7 @@ export class User extends Base{
     @Column({unique : true})
     email : string;
 
-    @Column({length : 30})
+    @Column()
     password: string;
 
     @Column({length : 30})
@@ -18,6 +18,6 @@ export class User extends Base{
     @Column({nullable : true, default : "s3-default-url"})
     profile_img_url : string;
 
-    @Column()
+    @Column({nullable : true})
     refreshToken : string;
 }

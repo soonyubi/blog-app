@@ -1,5 +1,6 @@
-import { Controller, Post, Get, Body, Param, Req } from '@nestjs/common';
+import { Controller, Post, Get, Body, Param, Req ,UseGuards} from '@nestjs/common';
 import { Request } from 'express';
+import { AccessTokenGuard } from 'src/common/guards/accessToken.guard';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { AuthService } from './auth.service';
 import { AuthDto } from './dto/auth.dto';
@@ -19,6 +20,7 @@ export class AuthController {
     return this.authService.signIn(authDto);
   }
 
+  @UseGuards(AccessTokenGuard)
   @Get('logout')
   logout(@Req() req : Request) {
     return this.authService.logout(req.user['id']);

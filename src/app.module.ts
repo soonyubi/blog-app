@@ -8,12 +8,13 @@ import { validationSchema } from './config/env/validationSchema';
 import { User } from './entities/user.entity';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
+import authConfig from './config/env/authConfig';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       envFilePath : [`${__dirname}/config/env/.${process.env.NODE_ENV}.env`],
-      load : [],
+      load : [authConfig],
       isGlobal : true,
       validationSchema
     }),
