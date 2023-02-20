@@ -1,8 +1,11 @@
 import { Module } from '@nestjs/common';
 import { ClassService } from './class.service';
 import { ClassController } from './class.controller';
-
+import {TypeOrmModule} from "@nestjs/typeorm";
+import { Space } from 'src/entities/space.entity';
+import { SpaceRole } from 'src/entities/spaceRole.entity';
 @Module({
+  imports : [TypeOrmModule.forFeature([Space,SpaceRole])],
   controllers: [ClassController],
   providers: [ClassService]
 })
