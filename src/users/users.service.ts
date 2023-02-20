@@ -21,11 +21,18 @@ export class UsersService  {
     return this.userRepository.find();
   }
 
-  async findOne(id: number) {
+  async findOne(id: number, requestUserEmail : string) {
     const user = await this.userRepository.findOne({where:{id}});
     if(!user) throw new NotFoundException("User Not found");
+    const requestUser = await this.findByUserEmail(requestUserEmail);
+    const isMe = requestUser.id === user.id;
+    if(isMe) return {
+      email : user.email,
+      firstname: user.firstname,
+      lastname : user.lastname,
+      profile_img_url : user.profile_img_url
+    }
     return {
-     
       firstname: user.firstname,
       lastname : user.lastname,
       profile_img_url : user.profile_img_url
