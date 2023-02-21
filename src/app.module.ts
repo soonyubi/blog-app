@@ -14,6 +14,7 @@ import { Space } from './entities/space.entity';
 import { SpaceRole } from './entities/spaceRole.entity';
 import { Take } from './entities/take.entity';
 import { PostModule } from './post/post.module';
+import { Posts } from './entities/post.entity';
 
 @Module({
   imports: [
@@ -30,7 +31,7 @@ import { PostModule } from './post/post.module';
     username : process.env.DATABASE_USERNAME,
     password : process.env.DATABASE_PASSWORD,
     database : process.env.DATABASE_NAME,
-    entities : [User, Space,SpaceRole, Take ],
+    entities : [User, Space,SpaceRole, Take, Posts ],
     synchronize : process.env.DATABASE_SYNCHRONIZE==='true'
   }),
     UsersModule,
