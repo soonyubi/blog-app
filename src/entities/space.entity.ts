@@ -1,5 +1,6 @@
 import {Column, Entity, OneToMany} from "typeorm";
 import { Base } from "./base.entity";
+import { Posts } from "./post.entity";
 import { SpaceRole } from "./spaceRole.entity";
 
 @Entity('space')
@@ -21,4 +22,7 @@ export class Space extends Base{
 
     @OneToMany(()=>SpaceRole, (spaceRole)=>spaceRole.space)
     spaceRoles:SpaceRole[];
+
+    @OneToMany(()=>Posts,(posts)=>posts.space)
+    posts:Posts[];
 }
