@@ -34,6 +34,8 @@ export class ClassService {
     async joinSpace(userId : number, spaceId : number, spaceRoleId: number){
         const spaceRole = await this.spaceRoleRepository.findOne({where:{id: spaceRoleId}});
         if(!spaceRole) throw new BadRequestException("Invalid space role id");
+        const isAlreadyJoin = await this.takeRepository.findOne({userId, spaceId});
+        if(isAlreadyJoin) throw new ForbiddenException("You already join this space");
         const newTake = {
             userId, 
             spaceId,

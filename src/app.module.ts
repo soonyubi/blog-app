@@ -13,6 +13,7 @@ import authConfig from './config/env/authConfig';
 import { Space } from './entities/space.entity';
 import { SpaceRole } from './entities/spaceRole.entity';
 import { Take } from './entities/take.entity';
+import { PostModule } from './post/post.module';
 
 @Module({
   imports: [
@@ -34,7 +35,8 @@ import { Take } from './entities/take.entity';
   }),
     UsersModule,
     AuthModule,
-    ClassModule],
+    ClassModule,
+    PostModule],
   controllers: [AppController],
   providers: [AppService, ConfigService],
 })
