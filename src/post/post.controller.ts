@@ -18,9 +18,9 @@ export class PostController {
 
   @UseGuards(AccessTokenGuard)
   @Get("all/:spaceId")
-  findAll(@Param('spaceId',ParseIntPipe) spaceId : number, @Req() req : Request, @Body('isAdmin') isAdmin : boolean) {
+  findAll(@Param('spaceId',ParseIntPipe) spaceId : number, @Req() req : Request) {
     const userId = req.user['id'];
-    return this.postService.findAll(userId, spaceId, isAdmin);
+    return this.postService.findAll(userId, spaceId);
   }
 
   @UseGuards(AccessTokenGuard)

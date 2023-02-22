@@ -40,9 +40,9 @@ export class PostService {
   }
 
   
-  async findAll(id : number, spaceId: number, isAdmin : boolean) {
+  async findAll(id : number, spaceId: number) {
     const posts = await this.postsRepository.find();
-    
+    const verify = await this.isAdmin(id, spaceId);
     const result = [];
     const result2 = [];
     for(var i = 0;i<posts.length;i++){
@@ -61,7 +61,7 @@ export class PostService {
 
     }
 
-    if(isAdmin) return result;
+    if(verify) return result;
     return result2;
   }
 
