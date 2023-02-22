@@ -1,8 +1,10 @@
+import { ForbiddenException } from '@nestjs/common';
 import { Injectable , BadRequestException} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { async } from 'rxjs';
 import { Posts } from 'src/entities/post.entity';
 import { Space } from 'src/entities/space.entity';
+import { Take } from 'src/entities/take.entity';
 import { User } from 'src/entities/user.entity';
 import { Repository } from 'typeorm';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -14,6 +16,7 @@ export class PostService {
     @InjectRepository(Posts) private postsRepository : Repository<Posts>,
     @InjectRepository(User) private userRepository : Repository<User>,
     @InjectRepository(Space) private spaceRepository : Repository<Space>,
+    @InjectRepository(Take) private takeRepository : Repository<Take>,
     ){}
 
   async create(userId: number, spaceId : number, createPostDto: CreatePostDto) {
@@ -74,8 +77,26 @@ export class PostService {
     return `This action updates a #${id} post`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} post`;
+  async remove(userId : number,spaceId: number, postId: number) {
+    // 1. 해당 유저가 관리자이거나 글의 작성자인지 verify 
+    
+    const isAdmin = await this.isAdmin(userId, spaceId);
+    const post = await this.postsRepository.findOne({where:{id : postId}});
+    console.log(post.userId);
+    console.log(isAdmin);
+    if(post.userId !== userId && !isAdmin) throw new ForbiddenException("You dont have right to delete this post");
+    
+    // post db에서 해당 post 삭제 
+    return this.postsRepository.softDelete({id:postId});
+    // class 내에서 해당 post 삭제
+    
+  }
+
+  // 유저가 해당 클래스의 admin인지 확인하는 helper function
+  async isAdmin(userId : number, spaceId : number){
+    const take = await this.takeRepository.findOne( {userId, spaceId},{relations:['role']});
+    if(!take) throw new BadRequestException("You are not participating in this class");
+    return take.role.isAdmin; 
   }
 
 

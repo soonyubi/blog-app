@@ -13,6 +13,11 @@ export class ClassController {
   
   // space 
 
+  // this method is for testing
+  // @Get(":id")
+  // getSpaceById(@Param('id',ParseIntPipe) spaceId : number){
+  //   return this.classService.findById(spaceId);
+  // }
   // create space
   @UseGuards(AccessTokenGuard)
   @Post()

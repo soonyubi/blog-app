@@ -19,6 +19,10 @@ export class ClassService {
      *  Space service
      * 
     */
+    findById(spaceId : number){
+        return this.spaceRepository.findOne({id:spaceId},{relations:['posts']})
+    }
+
     async createSpace(createSpaceDto : CreateSpaceDto, userId : number){
         const admin_verify_code = this.getVerifyCode();
         const participant_verify_code = this.getVerifyCode();

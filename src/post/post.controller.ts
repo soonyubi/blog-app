@@ -32,11 +32,13 @@ export class PostController {
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
-    return this.postService.update(+id, updatePostDto);
+    return this.postService.update(+id, updatePostDto); 
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.postService.remove(+id);
+  @UseGuards(AccessTokenGuard)
+  @Delete(':spaceId/:postId')
+  remove(@Param() params,  @Req() req : Request) {
+    const userId = req.user['id'];
+    return this.postService.remove(userId, params.spaceId, params.postId);
   }
 }

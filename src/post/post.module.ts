@@ -5,9 +5,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Posts } from 'src/entities/post.entity';
 import { User } from 'src/entities/user.entity';
 import { Space } from 'src/entities/space.entity';
+import { Take } from 'src/entities/take.entity';
 
 @Module({
-  imports:[TypeOrmModule.forFeature([Posts, User, Space])],
+  imports:[TypeOrmModule.forFeature([Posts, User, Space, Take])],
   controllers: [PostController],
   providers: [PostService]
 })
