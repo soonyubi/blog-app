@@ -62,8 +62,12 @@ export class PostService {
     return result2;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} post`;
+  async findOne(userId : number, spaceId: number, postId : number) {
+      // 1. 해당 post가 존재하는지
+      const post = await this.postsRepository.findOne({where:{id:postId}});
+      if(!post) throw new BadRequestException("The post doesn't exist");
+
+      return post;
   }
 
   update(id: number, updatePostDto: UpdatePostDto) {

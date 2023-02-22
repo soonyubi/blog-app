@@ -17,15 +17,17 @@ export class PostController {
   }
 
   @UseGuards(AccessTokenGuard)
-  @Get(":id")
-  findAll(@Param('id',ParseIntPipe) classId : number, @Req() req : Request, @Body('isAdmin') isAdmin : boolean) {
+  @Get("all/:spaceId")
+  findAll(@Param('spaceId',ParseIntPipe) spaceId : number, @Req() req : Request, @Body('isAdmin') isAdmin : boolean) {
     const userId = req.user['id'];
-    return this.postService.findAll(userId, classId, isAdmin);
+    return this.postService.findAll(userId, spaceId, isAdmin);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.postService.findOne(+id);
+  @UseGuards(AccessTokenGuard)
+  @Get('one/:spaceId/:postId')
+  findOne(@Param() params,@Req() req : Request) {
+    const userId = req.user['id'];
+    return this.postService.findOne(userId, params.spaceId, params.postId);
   }
 
   @Patch(':id')
