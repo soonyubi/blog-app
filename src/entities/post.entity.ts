@@ -1,5 +1,6 @@
-import {Column, Entity, JoinColumn, ManyToOne, OneToOne} from "typeorm";
+import {Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne} from "typeorm";
 import { Base } from "./base.entity";
+import { Chat } from "./chat.entity";
 import { Space } from "./space.entity";
 import { User } from "./user.entity";
 
@@ -30,4 +31,6 @@ export class Posts extends Base{
     // @JoinColumn()
     space : Space;
 
+    @OneToMany(()=>Chat, (chats)=>chats.post)
+    chats : Chat
 }
