@@ -15,6 +15,8 @@ import { SpaceRole } from './entities/spaceRole.entity';
 import { Take } from './entities/take.entity';
 import { PostModule } from './post/post.module';
 import { Posts } from './entities/post.entity';
+import { ChatModule } from './chat/chat.module';
+
 
 @Module({
   imports: [
@@ -37,7 +39,9 @@ import { Posts } from './entities/post.entity';
     UsersModule,
     AuthModule,
     ClassModule,
-    PostModule],
+    PostModule,
+    ChatModule,
+  ],
   controllers: [AppController],
   providers: [AppService, ConfigService],
 })
