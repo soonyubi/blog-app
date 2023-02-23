@@ -77,8 +77,8 @@ export class AuthService {
         return {accessToken, refreshToken};
     }
 
-    async refreshToken(userId : string, refreshToken : string){
-        const user = await this.usersService.findByUserId(parseInt(userId));
+    async refreshToken(userId : number, refreshToken : string){
+        const user = await this.usersService.findByUserId(userId);
         if(!user || !user.refreshToken) throw new ForbiddenException("Access Denied");
 
         const refreshTokenMatches = await argon2.verify(user.refreshToken, refreshToken);

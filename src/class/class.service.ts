@@ -116,7 +116,7 @@ export class ClassService {
         const role = await this.spaceRoleRepository.findOne({where:{id:spaceRoleId}});
         const take = await this.takeRepository.find({spaceId:spaceId, role : role});
         
-        if(take) throw new BadRequestException("Unable to delete because someone is in use.");
+        if(take.length>0) throw new BadRequestException("Unable to delete because someone is in use.");
 
         const spaceRoleList = space.spaceRoles;
         let isDelete = false;

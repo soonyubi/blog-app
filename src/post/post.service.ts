@@ -82,8 +82,7 @@ export class PostService {
     
     const isAdmin = await this.isAdmin(userId, spaceId);
     const post = await this.postsRepository.findOne({where:{id : postId}});
-    console.log(post.userId);
-    console.log(isAdmin);
+    
     if(post.userId !== userId && !isAdmin) throw new ForbiddenException("You dont have right to delete this post");
     
     // post db에서 해당 post 삭제 

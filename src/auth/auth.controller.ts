@@ -38,6 +38,7 @@ export class AuthController {
   refreshTokens(@Req() req : Request){
     this.logger.verbose("/GET user/refresh executed");
     const userId= req.user['id'];
+    console.log(userId);
     const refreshToken = req.user['refreshToken'];
     return this.authService.refreshToken(userId, refreshToken);
   }

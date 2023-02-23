@@ -32,10 +32,10 @@ character-set-server = utf8
 
 ```shell
 # development
-CREATE DATABASE classum-dev DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+CREATE DATABASE classum_dev DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 # production
-CREATE DATABASE classum-prod DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+CREATE DATABASE classum_prod DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 ```
 
 ## Server
@@ -52,4 +52,13 @@ yarn start:prod
 ```
 
 ### API
-API 테스트는 다음 공유해드린 링크를 통해 확인하실 수 있습니다.
+API 테스트는 다음 공유해드린 링크를 통해 확인하실 수 있습니다.<br>
+
+추가로 space를 생성하는 로직은 다음 그림으로 남겨두었습니다.<br>
+
+
+[postman 웹 링크](https://documenter.getpostman.com/view/20135732/2s93CKNu1S)
+
+
+![ex_screenshot](./asset/img/1.png)
+![ex_screenshot](./asset/img/2.png)
