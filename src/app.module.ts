@@ -16,6 +16,7 @@ import { Take } from './entities/take.entity';
 import { PostModule } from './post/post.module';
 import { Posts } from './entities/post.entity';
 import { ChatModule } from './chat/chat.module';
+import { Chat } from './entities/chat.entity';
 
 
 @Module({
@@ -33,7 +34,7 @@ import { ChatModule } from './chat/chat.module';
     username : process.env.DATABASE_USERNAME,
     password : process.env.DATABASE_PASSWORD,
     database : process.env.DATABASE_NAME,
-    entities : [User, Space,SpaceRole, Take, Posts ],
+    entities : [User, Space,SpaceRole, Take, Posts, Chat],
     synchronize : process.env.DATABASE_SYNCHRONIZE==='true'
   }),
     UsersModule,

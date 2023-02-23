@@ -10,6 +10,7 @@ import { Take } from 'src/entities/take.entity';
 @Module({
   imports:[TypeOrmModule.forFeature([Posts, User, Space, Take])],
   controllers: [PostController],
-  providers: [PostService]
+  providers: [PostService],
+  exports : [PostService]
 })
 export class PostModule {}

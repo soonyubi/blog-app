@@ -31,6 +31,6 @@ export class Posts extends Base{
     // @JoinColumn()
     space : Space;
 
-    @OneToMany(()=>Chat, (chats)=>chats.post)
-    chats : Chat
+    @OneToMany(()=>Chat, (chat)=>chat.post)
+    chats : Chat[];
 }
