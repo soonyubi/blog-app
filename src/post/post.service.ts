@@ -41,7 +41,7 @@ export class PostService {
 
   
   async findAll(id : number, spaceId: number) {
-    const posts = await this.postsRepository.find();
+    const posts = await this.postsRepository.find({relations:['chats']});
     const verify = await this.isAdmin(id, spaceId);
     const result = [];
     const result2 = [];

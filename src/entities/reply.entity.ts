@@ -1,11 +1,11 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne } from "typeorm";
 import { Base } from "./base.entity";
+import { Chat } from "./chat.entity";
 import { Posts } from "./post.entity";
-import { Reply } from "./reply.entity";
 import { User } from "./user.entity";
 
-@Entity("chat")
-export class Chat extends Base{
+@Entity("reply")
+export class Reply extends Base{
     @Column()
     content: string;
 
@@ -15,12 +15,13 @@ export class Chat extends Base{
     @Column()
     userId : number;
 
+    @Column()
+    parent: number;
+
     @Column("simple-array")
     child : string[];
 
-    @ManyToOne(()=>Posts,(posts)=>posts.chats)
-    post : Posts;
+    @ManyToOne(()=>Chat, (chat)=>chat.reply)
+    chat : Chat;
 
-    @OneToMany(()=>Reply,(reply)=>reply.chat,{nullable : true})
-    reply : Reply[];
 }
