@@ -15,5 +15,6 @@ export class Chat extends Base{
     @ManyToOne(()=>Posts,(posts)=>posts.chats)
     post : Posts;
 
-    
+    @OneToMany(()=>Reply,(reply)=>reply.chat)
+    replys : Reply[];
 }
